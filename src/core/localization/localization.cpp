@@ -99,6 +99,10 @@ bool Localization::Init(const std::string& yaml_path, const std::string& global_
             tf_callback_(loc_result_.ToGeoMsg());
         }
 
+        if (localization_result_callback_) {
+            localization_result_callback_(loc_result_);
+        }
+
         if (ui_) {
             ui_->UpdateNavState(loc_result_.ToNavState());
             ui_->UpdateRecentPose(loc_result_.pose_);
@@ -347,5 +351,9 @@ void Localization::SetExternalPose(const Eigen::Quaterniond& q, const Eigen::Vec
 }
 
 void Localization::SetTFCallback(Localization::TFCallback&& callback) { tf_callback_ = callback; }
+
+void Localization::SetLocalizationResultCallback(Localization::LocalizationResultCallback&& callback) {
+    localization_result_callback_ = callback;
+}
 
 }  // namespace lightning::loc
